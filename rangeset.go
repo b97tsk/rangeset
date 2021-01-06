@@ -19,6 +19,17 @@ type Range struct {
 // Thus, complement of an empty set is [math.MinInt64, math.MaxInt64).
 type RangeSet []Range
 
+// FromRange creates a RangeSet from a half-open range.
+func FromRange(low, high int64) RangeSet {
+	return RangeSet{{low, high}}
+}
+
+// Universal returns the largest RangeSet, which is the complement of an empty
+// set, i.e. [math.MinInt64, math.MaxInt64).
+func Universal() RangeSet {
+	return FromRange(math.MinInt64, math.MaxInt64)
+}
+
 // Add adds a single int64 into set.
 func (set *RangeSet) Add(single int64) {
 	set.AddRange(single, single+1)
@@ -216,7 +227,7 @@ func (set RangeSet) Equals(other RangeSet) bool {
 // Complement returns the inverse of set.
 func (set RangeSet) Complement() RangeSet {
 	if len(set) == 0 {
-		return RangeSet{{math.MinInt64, math.MaxInt64}}
+		return Universal()
 	}
 
 	return set.complement()
