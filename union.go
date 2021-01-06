@@ -36,12 +36,7 @@ func UnionBuffer(s1, s2, buffer RangeSet) RangeSet {
 	}
 
 	if len(s2) == 0 {
-		if s1 != nil {
-			result = make(RangeSet, len(s1))
-			copy(result, s1)
-		}
-
-		return result
+		return append(result, s1...)
 	}
 
 	r := s2[0]
