@@ -19,7 +19,7 @@ type Range struct {
 // Thus, complement of an empty set is [math.MinInt64, math.MaxInt64).
 type RangeSet []Range
 
-// FromRange creates a RangeSet from a half-open range.
+// FromRange creates a RangeSet from a half-open range [low, high).
 func FromRange(low, high int64) RangeSet {
 	return RangeSet{{low, high}}
 }
@@ -35,7 +35,7 @@ func (set *RangeSet) Add(single int64) {
 	set.AddRange(single, single+1)
 }
 
-// AddRange adds a half-open range into set.
+// AddRange adds a half-open range [low, high) into set.
 func (set *RangeSet) AddRange(low, high int64) {
 	s := *set
 
@@ -106,7 +106,7 @@ func (set *RangeSet) Delete(single int64) {
 	set.DeleteRange(single, single+1)
 }
 
-// DeleteRange removes a half-open range from set.
+// DeleteRange removes a half-open range [low, high) from set.
 func (set *RangeSet) DeleteRange(low, high int64) {
 	s := *set
 
@@ -192,15 +192,15 @@ func (set RangeSet) Contains(single int64) bool {
 	return set.ContainsRange(single, single+1)
 }
 
-// ContainsRange reports whether or not set contains every int64 in a half-
-// open range.
+// ContainsRange reports whether or not set contains every int64 in a
+// half-open range [low, high).
 func (set RangeSet) ContainsRange(low, high int64) bool {
 	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
 	return i < len(set) && set[i].Low <= low && high <= set[i].High && low < high
 }
 
 // ContainsAny reports whether or not set contains any int64 in a half-open
-// range.
+// range [low, high).
 func (set RangeSet) ContainsAny(low, high int64) bool {
 	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
 	t := set[i:]
