@@ -1,7 +1,6 @@
 package rangeset_test
 
 import (
-	"math"
 	"testing"
 
 	. "github.com/b97tsk/rangeset"
@@ -137,20 +136,6 @@ func TestRangeSet(t *testing.T) {
 		assert(t, "Case 3", !equals(
 			RangeSet{{1, 3}, {5, 7}},
 			RangeSet{{1, 3}},
-		))
-	})
-	t.Run("TestComplement", func(t *testing.T) {
-		assert(t, "Case 1", equals(
-			RangeSet{}.Complement(),
-			RangeSet{{math.MinInt64, math.MaxInt64}},
-		))
-		assert(t, "Case 2", equals(
-			RangeSet{{math.MinInt64, math.MaxInt64}}.Complement(),
-			RangeSet{},
-		))
-		assert(t, "Case 3", equals(
-			RangeSet{{1, 4}, {6, 9}}.Complement(),
-			RangeSet{{math.MinInt64, 1}, {4, 6}, {9, math.MaxInt64}},
 		))
 	})
 	t.Run("TestLength", func(t *testing.T) {
