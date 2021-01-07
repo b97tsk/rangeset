@@ -2,19 +2,19 @@ package rangeset
 
 import "sort"
 
-// Intersect returns the intersection of set and other.
-func (set RangeSet) Intersect(other RangeSet) RangeSet {
-	return IntersectBuffer(set, other, nil)
+// Intersection returns the intersection of set and other.
+func (set RangeSet) Intersection(other RangeSet) RangeSet {
+	return IntersectionBuffer(set, other, nil)
 }
 
-// Intersect returns the intersection of zero or more sets.
-func Intersect(sets ...RangeSet) RangeSet {
-	return combine(IntersectBuffer, sets...)
+// Intersection returns the intersection of zero or more sets.
+func Intersection(sets ...RangeSet) RangeSet {
+	return combine(IntersectionBuffer, sets...)
 }
 
-// IntersectBuffer returns the intersection of s1 and s2, uses buffer as its
-// initial backing storage.
-func IntersectBuffer(s1, s2, buffer RangeSet) RangeSet {
+// IntersectionBuffer returns the intersection of s1 and s2, uses buffer as
+// its initial backing storage.
+func IntersectionBuffer(s1, s2, buffer RangeSet) RangeSet {
 	result := buffer[:0]
 
 	for {
