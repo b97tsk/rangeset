@@ -40,4 +40,5 @@ func TestUnion(t *testing.T) {
 		RangeSet{{1, 20}},
 	))
 	assert(t, "Case 7", equals(Union(), RangeSet{}))
+	assert(t, "Case 8", equals(Union(RangeSet{}), RangeSet{}))
 }

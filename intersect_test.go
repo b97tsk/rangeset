@@ -32,4 +32,5 @@ func TestIntersect(t *testing.T) {
 		RangeSet{{2, 4}, {5, 6}, {7, 9}, {10, 11}},
 	))
 	assert(t, "Case 5", equals(Intersect(), RangeSet{}))
+	assert(t, "Case 6", equals(Intersect(RangeSet{}), RangeSet{}))
 }
