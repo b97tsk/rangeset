@@ -9,20 +9,7 @@ func (set RangeSet) Intersect(other RangeSet) RangeSet {
 
 // Intersect returns the intersection of zero or more sets.
 func Intersect(sets ...RangeSet) RangeSet {
-	if len(sets) == 0 {
-		return nil
-	}
-
-	var r1, r2 RangeSet
-
-	r1 = append(r1, sets[0]...)
-
-	for _, set := range sets[1:] {
-		r2 = IntersectBuffer(r1, set, r2)
-		r1, r2 = r2, r1
-	}
-
-	return r1
+	return combine(IntersectBuffer, sets...)
 }
 
 // IntersectBuffer returns the intersection of s1 and s2, uses buffer as its
