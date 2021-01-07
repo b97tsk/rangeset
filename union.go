@@ -15,8 +15,7 @@ func Union(sets ...RangeSet) RangeSet {
 
 	var r1, r2 RangeSet
 
-	r1 = make(RangeSet, len(sets[0]))
-	copy(r1, sets[0])
+	r1 = append(r1, sets[0]...)
 
 	for _, set := range sets[1:] {
 		r2 = UnionBuffer(r1, set, r2)
