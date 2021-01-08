@@ -9,7 +9,7 @@ import (
 
 // A Range is a half-open interval of int64.
 type Range struct {
-	Low  int64
+	Low  int64 // inclusive
 	High int64 // exclusive
 }
 
@@ -246,7 +246,7 @@ func (set RangeSet) Equals(other RangeSet) bool {
 }
 
 // Extent returns the smallest Range that covers the whole set.
-// If set is empty, Extent returns a zero value.
+// If set is empty, Extent returns the zero value.
 func (set RangeSet) Extent() Range {
 	if len(set) == 0 {
 		return Range{}
@@ -258,7 +258,7 @@ func (set RangeSet) Extent() Range {
 	}
 }
 
-// IsSubsetOf reports whether or not set is a subset of other.
+// IsSubsetOf reports whether or not other contains every int64 in set.
 func (set RangeSet) IsSubsetOf(other RangeSet) bool {
 	for _, r := range set {
 		if !other.ContainsRange(r.Low, r.High) {
