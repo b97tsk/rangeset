@@ -153,6 +153,22 @@ func TestContains(t *testing.T) {
 	}
 }
 
+func TestDifference(t *testing.T) {
+	testCases := []struct {
+		Result, Expect RangeSet
+	}{
+		{
+			RangeSet{{1, 5}, {7, 11}}.Difference(RangeSet{{3, 9}}),
+			RangeSet{{1, 3}, {9, 11}},
+		},
+	}
+	for i, c := range testCases {
+		if !c.Result.Equals(c.Expect) {
+			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+		}
+	}
+}
+
 func TestEquals(t *testing.T) {
 	testCases := []struct {
 		Result, Expect RangeSet

@@ -224,6 +224,12 @@ func (set RangeSet) ContainsAny(low, high int64) bool {
 	return i < j && low < high
 }
 
+// Difference returns the subset of set that having all elements in other
+// excluded.
+func (set RangeSet) Difference(other RangeSet) RangeSet {
+	return set.Intersection(other.Complement())
+}
+
 // Equals reports whether or not set is identical to other.
 func (set RangeSet) Equals(other RangeSet) bool {
 	if len(set) != len(other) {
