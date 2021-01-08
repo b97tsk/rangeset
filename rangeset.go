@@ -252,6 +252,17 @@ func (set RangeSet) Extent() Range {
 	}
 }
 
+// IsSubsetOf reports whether or not set is a subset of other.
+func (set RangeSet) IsSubsetOf(other RangeSet) bool {
+	for _, r := range set {
+		if !other.ContainsRange(r.Low, r.High) {
+			return false
+		}
+	}
+
+	return true
+}
+
 // Length returns the number of int64 in set.
 func (set RangeSet) Length() uint64 {
 	acc := uint64(0)

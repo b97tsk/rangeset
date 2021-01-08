@@ -201,6 +201,19 @@ func TestExtent(t *testing.T) {
 	}
 }
 
+func TestIsSubsetOf(t *testing.T) {
+	assertions := []bool{
+		RangeSet{}.IsSubsetOf(RangeSet{}) == true,
+		RangeSet{{3, 9}}.IsSubsetOf(RangeSet{{1, 11}}) == true,
+		RangeSet{{3, 9}}.IsSubsetOf(RangeSet{{1, 5}, {7, 11}}) == false,
+	}
+	for i, ok := range assertions {
+		if !ok {
+			t.Logf("Case %v: FAILED", i)
+		}
+	}
+}
+
 func TestLength(t *testing.T) {
 	assertions := []bool{
 		RangeSet{}.Length() == 0,
