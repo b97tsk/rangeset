@@ -12,7 +12,7 @@ type Range struct {
 	High int64 // exclusive
 }
 
-// A RangeSet is a non-overlapped ordered slice of Range.
+// A RangeSet is a non-overlapping ordered slice of Range.
 // The zero value for a RangeSet is an empty set ready to use.
 //
 // Since Range is half-open, you can never add math.MaxInt64 into a RangeSet.
@@ -83,7 +83,7 @@ func (set *RangeSet) AddRange(low, high int64) {
 		j++
 	}
 
-	if i == j { // Case 3.
+	if i == j { // Case 3 (where low and high overlaps).
 		if low < high {
 			s = append(s, Range{})
 			copy(s[i+1:], s[i:])
