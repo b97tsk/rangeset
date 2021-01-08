@@ -224,6 +224,19 @@ func (set RangeSet) Equals(other RangeSet) bool {
 	return true
 }
 
+// Extent returns the smallest Range that covers the whole set.
+// If set is empty, Extent returns a zero value.
+func (set RangeSet) Extent() Range {
+	if len(set) == 0 {
+		return Range{}
+	}
+
+	return Range{
+		Low:  set[0].Low,
+		High: set[len(set)-1].High,
+	}
+}
+
 // Length returns the number of int64 in set.
 func (set RangeSet) Length() uint64 {
 	acc := uint64(0)

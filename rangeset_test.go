@@ -1,6 +1,7 @@
 package rangeset_test
 
 import (
+	"math"
 	"testing"
 
 	. "github.com/b97tsk/rangeset"
@@ -171,6 +172,30 @@ func TestEquals(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
+			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+		}
+	}
+}
+
+func TestExtent(t *testing.T) {
+	testCases := []struct {
+		Result, Expect Range
+	}{
+		{
+			RangeSet{{1, 3}, {5, 7}}.Extent(),
+			Range{1, 7},
+		},
+		{
+			Universal().Extent(),
+			Range{math.MinInt64, math.MaxInt64},
+		},
+		{
+			RangeSet{}.Extent(),
+			Range{},
+		},
+	}
+	for i, c := range testCases {
+		if c.Result != c.Expect {
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
