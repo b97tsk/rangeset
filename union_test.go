@@ -7,38 +7,46 @@ import (
 )
 
 func TestUnion(t *testing.T) {
-	equals := RangeSet.Equals
-	assert(t, "Case 1", equals(
-		RangeSet{{1, 3}, {5, 7}}.Union(RangeSet{}),
-		RangeSet{{1, 3}, {5, 7}},
-	))
-	assert(t, "Case 2", equals(
-		RangeSet{}.Union(RangeSet{{1, 3}, {5, 7}}),
-		RangeSet{{1, 3}, {5, 7}},
-	))
-	assert(t, "Case 3", equals(
-		RangeSet{{1, 3}}.Union(RangeSet{{5, 7}}),
-		RangeSet{{1, 3}, {5, 7}},
-	))
-	assert(t, "Case 4", equals(
-		RangeSet{{1, 5}}.Union(RangeSet{{3, 7}}),
-		RangeSet{{1, 7}},
-	))
-	assert(t, "Case 5", equals(
-		Union(
-			RangeSet{{2, 6}, {7, 12}},
-			RangeSet{{1, 4}, {5, 9}, {10, 16}},
-		),
-		RangeSet{{1, 16}},
-	))
-	assert(t, "Case 6", equals(
-		Union(
-			RangeSet{{2, 6}, {7, 12}},
-			RangeSet{{1, 4}, {5, 9}, {10, 16}},
-			RangeSet{{1, 20}},
-		),
-		RangeSet{{1, 20}},
-	))
-	assert(t, "Case 7", equals(Union(), RangeSet{}))
-	assert(t, "Case 8", equals(Union(RangeSet{}), RangeSet{}))
+	testCases := []struct {
+		Result, Expect RangeSet
+	}{
+		{
+			RangeSet{{1, 3}, {5, 7}}.Union(RangeSet{}),
+			RangeSet{{1, 3}, {5, 7}},
+		},
+		{
+			RangeSet{}.Union(RangeSet{{1, 3}, {5, 7}}),
+			RangeSet{{1, 3}, {5, 7}},
+		},
+		{
+			RangeSet{{1, 3}}.Union(RangeSet{{5, 7}}),
+			RangeSet{{1, 3}, {5, 7}},
+		},
+		{
+			RangeSet{{1, 5}}.Union(RangeSet{{3, 7}}),
+			RangeSet{{1, 7}},
+		},
+		{
+			Union(
+				RangeSet{{3, 11}, {13, 21}},
+				RangeSet{{1, 5}, {9, 15}, {19, 23}},
+			),
+			RangeSet{{1, 23}},
+		},
+		{
+			Union(
+				RangeSet{{3, 11}, {13, 21}},
+				RangeSet{{1, 5}, {9, 15}, {19, 23}},
+				RangeSet{{5, 19}},
+			),
+			RangeSet{{1, 23}},
+		},
+		{Union(), RangeSet{}},
+		{Union(RangeSet{}), RangeSet{}},
+	}
+	for i, c := range testCases {
+		if !c.Result.Equals(c.Expect) {
+			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+		}
+	}
 }

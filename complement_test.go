@@ -8,17 +8,25 @@ import (
 )
 
 func TestComplement(t *testing.T) {
-	equals := RangeSet.Equals
-	assert(t, "Case 1", equals(
-		RangeSet{}.Complement(),
-		RangeSet{{math.MinInt64, math.MaxInt64}},
-	))
-	assert(t, "Case 2", equals(
-		RangeSet{{math.MinInt64, math.MaxInt64}}.Complement(),
-		RangeSet{},
-	))
-	assert(t, "Case 3", equals(
-		RangeSet{{1, 4}, {6, 9}}.Complement(),
-		RangeSet{{math.MinInt64, 1}, {4, 6}, {9, math.MaxInt64}},
-	))
+	testCases := []struct {
+		Result, Expect RangeSet
+	}{
+		{
+			RangeSet{}.Complement(),
+			RangeSet{{math.MinInt64, math.MaxInt64}},
+		},
+		{
+			RangeSet{{math.MinInt64, math.MaxInt64}}.Complement(),
+			RangeSet{},
+		},
+		{
+			RangeSet{{1, 5}, {9, 13}}.Complement(),
+			RangeSet{{math.MinInt64, 1}, {5, 9}, {13, math.MaxInt64}},
+		},
+	}
+	for i, c := range testCases {
+		if !c.Result.Equals(c.Expect) {
+			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+		}
+	}
 }
