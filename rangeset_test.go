@@ -7,6 +7,26 @@ import (
 	. "github.com/b97tsk/rangeset"
 )
 
+func TestFromRange(t *testing.T) {
+	testCases := []struct {
+		Result, Expect RangeSet
+	}{
+		{
+			FromRange(1, 5),
+			RangeSet{{1, 5}},
+		},
+		{
+			FromRange(5, 1),
+			RangeSet{},
+		},
+	}
+	for i, c := range testCases {
+		if !c.Result.Equals(c.Expect) {
+			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+		}
+	}
+}
+
 func TestAdd(t *testing.T) {
 	addRange := func(s RangeSet, r Range) RangeSet {
 		s.AddRanges(r)

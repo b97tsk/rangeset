@@ -21,7 +21,13 @@ type Range struct {
 type RangeSet []Range
 
 // FromRange creates a RangeSet from a half-open range [low, high).
+//
+// If low >= high, FromRange returns nil.
 func FromRange(low, high int64) RangeSet {
+	if low >= high {
+		return nil
+	}
+
 	return RangeSet{{low, high}}
 }
 
