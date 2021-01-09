@@ -20,7 +20,7 @@ type Range struct {
 // Thus, complement of an empty set is [math.MinInt64, math.MaxInt64).
 type RangeSet []Range
 
-// FromRange creates a RangeSet from a half-open range [low, high).
+// FromRange creates a RangeSet from range [low, high).
 //
 // If low >= high, FromRange returns nil.
 func FromRange(low, high int64) RangeSet {
@@ -42,7 +42,7 @@ func (set *RangeSet) Add(single int64) {
 	set.AddRange(single, single+1)
 }
 
-// AddRange adds a half-open range [low, high) into set.
+// AddRange adds range [low, high) into set.
 func (set *RangeSet) AddRange(low, high int64) {
 	s := *set
 
@@ -101,8 +101,6 @@ func (set *RangeSet) AddRange(low, high int64) {
 		return
 	}
 
-	// Case 4 and 5.
-
 	s[i] = Range{low, high}
 	s = append(s[:i+1], s[j:]...)
 	*set = s
@@ -120,7 +118,7 @@ func (set *RangeSet) Delete(single int64) {
 	set.DeleteRange(single, single+1)
 }
 
-// DeleteRange removes a half-open range [low, high) from set.
+// DeleteRange removes range [low, high) from set.
 func (set *RangeSet) DeleteRange(low, high int64) {
 	s := *set
 
@@ -213,15 +211,15 @@ func (set RangeSet) Contains(single int64) bool {
 	return set.ContainsRange(single, single+1)
 }
 
-// ContainsRange reports whether or not set contains every int64 in a
-// half-open range [low, high).
+// ContainsRange reports whether or not set contains every int64 in range
+// [low, high).
 func (set RangeSet) ContainsRange(low, high int64) bool {
 	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
 	return i < len(set) && set[i].Low <= low && high <= set[i].High && low < high
 }
 
-// ContainsAny reports whether or not set contains any int64 in a half-open
-// range [low, high).
+// ContainsAny reports whether or not set contains any int64 in range
+// [low, high).
 func (set RangeSet) ContainsAny(low, high int64) bool {
 	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
 	t := set[i:]
@@ -252,6 +250,7 @@ func (set RangeSet) Equals(other RangeSet) bool {
 }
 
 // Extent returns the smallest Range that covers the whole set.
+//
 // If set is empty, Extent returns the zero value.
 func (set RangeSet) Extent() Range {
 	if len(set) == 0 {
