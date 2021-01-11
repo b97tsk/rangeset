@@ -53,6 +53,20 @@ func TestSymmetricDifference(t *testing.T) {
 		{
 			SymmetricDifference(
 				RangeSet{{1, 5}, {9, 13}, {17, 21}, {25, 29}},
+				RangeSet{{9, 25}},
+			),
+			RangeSet{{1, 5}, {13, 17}, {21, 29}},
+		},
+		{
+			SymmetricDifference(
+				RangeSet{{1, 5}, {9, 13}, {17, 21}, {25, 29}},
+				RangeSet{{5, 21}},
+			),
+			RangeSet{{1, 9}, {13, 17}, {25, 29}},
+		},
+		{
+			SymmetricDifference(
+				RangeSet{{1, 5}, {9, 13}, {17, 21}, {25, 29}},
 				RangeSet{{7, 21}},
 			),
 			RangeSet{{1, 5}, {7, 9}, {13, 17}, {25, 29}},
@@ -63,6 +77,20 @@ func TestSymmetricDifference(t *testing.T) {
 				RangeSet{{11, 21}},
 			),
 			RangeSet{{1, 5}, {9, 11}, {13, 17}, {25, 29}},
+		},
+		{
+			SymmetricDifference(
+				RangeSet{{1, 5}, {9, 13}, {17, 21}, {25, 29}},
+				RangeSet{{7, 23}},
+			),
+			RangeSet{{1, 5}, {7, 9}, {13, 17}, {21, 23}, {25, 29}},
+		},
+		{
+			SymmetricDifference(
+				RangeSet{{1, 5}, {9, 13}, {17, 21}, {25, 29}},
+				RangeSet{{5, 25}},
+			),
+			RangeSet{{1, 9}, {13, 17}, {21, 29}},
 		},
 		{
 			SymmetricDifference(RangeSet{}, RangeSet{}),

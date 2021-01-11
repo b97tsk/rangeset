@@ -26,7 +26,7 @@ func symmetricDifferenceRange(set *RangeSet, low, high int64) {
 	s := *set
 
 	i := sort.Search(len(s), func(i int) bool { return s[i].High > low })
-	// j := sort.Search(len(s), func(i int) bool { return s[i].Low > high })
+	// j := sort.Search(len(s), func(i int) bool { return s[i].Low >= high })
 
 	// ┌────────┬─────────────────────────────────────────┐
 	// │        │    j-1        j        i-1        i     │
@@ -55,7 +55,7 @@ func symmetricDifferenceRange(set *RangeSet, low, high int64) {
 
 	// Optimized, j >= i.
 	t := s[i:]
-	j := i + sort.Search(len(t), func(i int) bool { return t[i].Low > high })
+	j := i + sort.Search(len(t), func(i int) bool { return t[i].Low >= high })
 
 	if i == j { // Case 1, 2 and 3.
 		set.AddRange(low, high)
@@ -63,6 +63,16 @@ func symmetricDifferenceRange(set *RangeSet, low, high int64) {
 	}
 
 	// Case 4 and 5.
+
+	if i > 0 && low == s[i-1].High {
+		low = s[i].Low
+		s[i-1].High = low
+	}
+
+	if j < len(s) && high == s[j].Low {
+		high = s[j-1].High
+		s[j].Low = high
+	}
 
 	lowIdentical := low == s[i].Low
 	highIdentical := high == s[j-1].High
