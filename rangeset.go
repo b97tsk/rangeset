@@ -1,5 +1,5 @@
-// Package rangeset is a library for manipulating non-overlapping sets of
-// ranges.
+// Package rangeset is a library for manipulating sets of non-overlapping
+// non-adjacent ranges.
 package rangeset
 
 import (
@@ -13,8 +13,8 @@ type Range struct {
 	High int64 // exclusive
 }
 
-// A RangeSet is a non-overlapping ordered slice of Ranges.
-// The zero value for a RangeSet is an empty set ready to use.
+// A RangeSet is a slice of non-overlapping non-adjacent ordered Ranges.
+// The zero value for a RangeSet, i.e. a nil RangeSet, is an empty set.
 //
 // Since Range is half-open, you can never add math.MaxInt64 into a RangeSet.
 // Thus, complement of an empty set is [math.MinInt64, math.MaxInt64).

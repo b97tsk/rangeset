@@ -4,4 +4,4 @@
 [![Build Status](https://github.com/b97tsk/rangeset/workflows/build/badge.svg)](https://github.com/b97tsk/rangeset/actions)
 [![codecov](https://codecov.io/gh/b97tsk/rangeset/branch/main/graph/badge.svg?token=TXFXESFFQ2)](https://codecov.io/gh/b97tsk/rangeset)
 
-A Go library for manipulating non-overlapping sets of ranges.
+A Go library for manipulating sets of non-overlapping non-adjacent ranges.
