@@ -195,26 +195,15 @@ func TestDifference(t *testing.T) {
 }
 
 func TestEquals(t *testing.T) {
-	testCases := []struct {
-		Result, Expect RangeSet
-	}{
-		{
-			RangeSet{{1, 3}, {5, 7}},
-			RangeSet{{1, 3}, {5, 7}},
-		},
-		{
-			RangeSet{{1, 3}, {5, 7}},
-			RangeSet{{1, 3}, {5, 9}},
-		},
-		{
-			RangeSet{{1, 3}, {5, 7}},
-			RangeSet{{1, 3}},
-		},
+	assertions := []bool{
+		RangeSet{{1, 3}, {5, 7}}.Equals(RangeSet{{1, 3}, {5, 7}}),
+		!RangeSet{{1, 3}, {5, 7}}.Equals(RangeSet{{1, 3}, {5, 9}}),
+		!RangeSet{{1, 3}, {5, 7}}.Equals(RangeSet{{1, 3}}),
 	}
-	for i, c := range testCases {
-		if !c.Result.Equals(c.Expect) {
+	for i, ok := range assertions {
+		if !ok {
 			t.Fail()
-			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+			t.Logf("Case %v: FAILED", i)
 		}
 	}
 }
