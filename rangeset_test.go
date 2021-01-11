@@ -22,6 +22,7 @@ func TestFromRange(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
+			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
@@ -75,6 +76,7 @@ func TestAdd(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
+			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
@@ -136,6 +138,7 @@ func TestDelete(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
+			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
@@ -168,6 +171,7 @@ func TestContains(t *testing.T) {
 	}
 	for i, ok := range assertions {
 		if !ok {
+			t.Fail()
 			t.Logf("Case %v: FAILED", i)
 		}
 	}
@@ -184,6 +188,7 @@ func TestDifference(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
+			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
@@ -208,6 +213,7 @@ func TestEquals(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
+			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
@@ -232,6 +238,7 @@ func TestExtent(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if c.Result != c.Expect {
+			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
@@ -245,6 +252,7 @@ func TestIsSubsetOf(t *testing.T) {
 	}
 	for i, ok := range assertions {
 		if !ok {
+			t.Fail()
 			t.Logf("Case %v: FAILED", i)
 		}
 	}
@@ -258,6 +266,7 @@ func TestLength(t *testing.T) {
 	}
 	for i, ok := range assertions {
 		if !ok {
+			t.Fail()
 			t.Logf("Case %v: FAILED", i)
 		}
 	}

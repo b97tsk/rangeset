@@ -26,6 +26,7 @@ func TestComplement(t *testing.T) {
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
+			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
