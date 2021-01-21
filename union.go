@@ -17,42 +17,39 @@ func Union(sets ...RangeSet) RangeSet {
 func UnionBuffer(s1, s2, buffer RangeSet) RangeSet {
 	result := buffer[:0]
 
-	if len(s1) < len(s2) {
-		s1, s2 = s2, s1
-	}
-
-	if len(s2) == 0 {
-		return append(result, s1...)
-	}
-
-	r := s2[0]
-	s2 = s2[1:]
-
 	for {
+		if len(s1) < len(s2) {
+			s1, s2 = s2, s1
+		}
+
+		if len(s2) == 0 {
+			return append(result, s1...)
+		}
+
+		r := s2[0]
+		s2 = s2[1:]
+
 		i := sort.Search(len(s1), func(i int) bool { return s1[i].Low > r.Low })
-		j := sort.Search(len(s1), func(i int) bool { return s1[i].High > r.High })
 
 		if i > 0 && r.Low <= s1[i-1].High {
 			r.Low = s1[i-1].Low
 			i--
 		}
 
-		if j < len(s1) && r.High >= s1[j].Low {
-			r.High = s1[j].High
-			j++
-		}
-
 		result = append(result, s1[:i]...)
+		s1 = s1[i:]
 
-		if len(s2) == 0 {
-			result = append(result, r)
-			result = append(result, s1[j:]...)
+	Again:
+		j := sort.Search(len(s1), func(i int) bool { return s1[i].High > r.High })
+		s1 = s1[j:]
 
-			break
+		if len(s1) > 0 && r.High >= s1[0].Low {
+			r.High = s1[0].High
+			s1, s2 = s2, s1[1:]
+
+			goto Again
 		}
 
-		s1, s2 = s2, s1[j:]
+		result = append(result, r)
 	}
-
-	return result
 }
