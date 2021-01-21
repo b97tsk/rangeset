@@ -23,17 +23,19 @@ func IntersectionBuffer(s1, s2, buffer RangeSet) RangeSet {
 		}
 
 		if len(s2) == 0 {
-			break
+			return result
 		}
 
 		r := s2[0]
-		i := sort.Search(len(s1), func(i int) bool { return s1[i].High > r.Low })
-		t := s1[i:]
-		j := i + sort.Search(len(t), func(i int) bool { return t[i].Low >= r.High })
+		s2 = s2[1:]
 
-		if i < j {
+		i := sort.Search(len(s1), func(i int) bool { return s1[i].High > r.Low })
+		s1 = s1[i:]
+		j := sort.Search(len(s1), func(i int) bool { return s1[i].Low >= r.High })
+
+		if j > 0 {
 			start := len(result)
-			result = append(result, s1[i:j]...)
+			result = append(result, s1[:j]...)
 
 			if r0 := &result[start]; r0.Low < r.Low {
 				r0.Low = r.Low
@@ -46,8 +48,6 @@ func IntersectionBuffer(s1, s2, buffer RangeSet) RangeSet {
 			j--
 		}
 
-		s1, s2 = s1[j:], s2[1:]
+		s1 = s1[j:]
 	}
-
-	return result
 }

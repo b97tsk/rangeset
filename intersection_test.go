@@ -35,6 +35,26 @@ func TestIntersection(t *testing.T) {
 		},
 		{Intersection(), RangeSet{}},
 		{Intersection(RangeSet{}), RangeSet{}},
+		{
+			func() RangeSet {
+				var x2, x3, x5 RangeSet
+
+				for i := 2; i < 100; i += 2 {
+					x2.Add(int64(i))
+				}
+
+				for i := 3; i < 100; i += 3 {
+					x3.Add(int64(i))
+				}
+
+				for i := 5; i < 100; i += 5 {
+					x5.Add(int64(i))
+				}
+
+				return Intersection(x2, x3, x5)
+			}(),
+			RangeSet{{30, 31}, {60, 61}, {90, 91}},
+		},
 	}
 	for i, c := range testCases {
 		if !c.Result.Equals(c.Expect) {
