@@ -37,7 +37,7 @@ func Universal() RangeSet {
 	return FromRange(math.MinInt64, math.MaxInt64)
 }
 
-// Add adds a single int64 into set.
+// Add adds a single element into set.
 func (set *RangeSet) Add(single int64) {
 	set.AddRange(single, single+1)
 }
@@ -113,7 +113,7 @@ func (set *RangeSet) AddRanges(ranges ...Range) {
 	}
 }
 
-// Delete removes a single int64 from set.
+// Delete removes a single element from set.
 func (set *RangeSet) Delete(single int64) {
 	set.DeleteRange(single, single+1)
 }
@@ -206,19 +206,19 @@ func (set *RangeSet) DeleteRanges(ranges ...Range) {
 	}
 }
 
-// Contains reports whether or not set contains a single int64.
+// Contains reports whether or not set contains a single element.
 func (set RangeSet) Contains(single int64) bool {
 	return set.ContainsRange(single, single+1)
 }
 
-// ContainsRange reports whether or not set contains every int64 in range
+// ContainsRange reports whether or not set contains every element in range
 // [low, high).
 func (set RangeSet) ContainsRange(low, high int64) bool {
 	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
 	return i < len(set) && set[i].Low <= low && high <= set[i].High && low < high
 }
 
-// ContainsAny reports whether or not set contains any int64 in range
+// ContainsAny reports whether or not set contains any element in range
 // [low, high).
 func (set RangeSet) ContainsAny(low, high int64) bool {
 	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
@@ -263,7 +263,7 @@ func (set RangeSet) Extent() Range {
 	}
 }
 
-// IsSubsetOf reports whether or not other contains every int64 in set.
+// IsSubsetOf reports whether or not other contains every element in set.
 func (set RangeSet) IsSubsetOf(other RangeSet) bool {
 	for _, r := range set {
 		if !other.ContainsRange(r.Low, r.High) {
@@ -274,7 +274,7 @@ func (set RangeSet) IsSubsetOf(other RangeSet) bool {
 	return true
 }
 
-// Count returns the number of int64 in set.
+// Count returns the number of element in set.
 func (set RangeSet) Count() uint64 {
 	var count uint64
 
