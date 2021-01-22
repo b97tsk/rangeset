@@ -247,11 +247,11 @@ func TestIsSubsetOf(t *testing.T) {
 	}
 }
 
-func TestLength(t *testing.T) {
+func TestCount(t *testing.T) {
 	assertions := []bool{
-		RangeSet{}.Length() == 0,
-		RangeSet{{1, 4}}.Length() == 3,
-		RangeSet{{1, 3}, {5, 7}}.Length() == 4,
+		RangeSet{}.Count() == 0,
+		RangeSet{{1, 4}}.Count() == 3,
+		RangeSet{{1, 3}, {5, 7}}.Count() == 4,
 	}
 	for i, ok := range assertions {
 		if !ok {

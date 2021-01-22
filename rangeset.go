@@ -274,12 +274,13 @@ func (set RangeSet) IsSubsetOf(other RangeSet) bool {
 	return true
 }
 
-// Length returns the number of int64 in set.
-func (set RangeSet) Length() uint64 {
-	acc := uint64(0)
+// Count returns the number of int64 in set.
+func (set RangeSet) Count() uint64 {
+	var count uint64
+
 	for _, r := range set {
-		acc += uint64(r.High - r.Low)
+		count += uint64(r.High - r.Low)
 	}
 
-	return acc
+	return count
 }
