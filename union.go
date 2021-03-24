@@ -4,17 +4,17 @@ import "sort"
 
 // Union returns the union of set and other.
 func (set RangeSet) Union(other RangeSet) RangeSet {
-	return UnionBuffer(set, other, nil)
+	return unionBuffer(set, other, nil)
 }
 
 // Union returns the union of zero or more sets.
 func Union(sets ...RangeSet) RangeSet {
-	return combine(UnionBuffer, sets...)
+	return combine(unionBuffer, sets...)
 }
 
-// UnionBuffer returns the union of s1 and s2, uses buffer as its initial
+// unionBuffer returns the union of s1 and s2, using buffer as its initial
 // backing storage.
-func UnionBuffer(s1, s2, buffer RangeSet) RangeSet {
+func unionBuffer(s1, s2, buffer RangeSet) RangeSet {
 	result := buffer[:0]
 
 	for {

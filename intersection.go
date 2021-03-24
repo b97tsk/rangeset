@@ -4,17 +4,17 @@ import "sort"
 
 // Intersection returns the intersection of set and other.
 func (set RangeSet) Intersection(other RangeSet) RangeSet {
-	return IntersectionBuffer(set, other, nil)
+	return intersectionBuffer(set, other, nil)
 }
 
 // Intersection returns the intersection of zero or more sets.
 func Intersection(sets ...RangeSet) RangeSet {
-	return combine(IntersectionBuffer, sets...)
+	return combine(intersectionBuffer, sets...)
 }
 
-// IntersectionBuffer returns the intersection of s1 and s2, uses buffer as
-// its initial backing storage.
-func IntersectionBuffer(s1, s2, buffer RangeSet) RangeSet {
+// intersectionBuffer returns the intersection of s1 and s2, using buffer
+// as its initial backing storage.
+func intersectionBuffer(s1, s2, buffer RangeSet) RangeSet {
 	result := buffer[:0]
 
 	for {
