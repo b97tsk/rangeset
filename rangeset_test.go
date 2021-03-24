@@ -162,12 +162,6 @@ func TestContains(t *testing.T) {
 		s.ContainsRange(1, 7) == false,
 		s.ContainsRange(1, 1) == false,
 		s.ContainsRange(2, 2) == false,
-		s.ContainsAny(1, 3) == true,
-		s.ContainsAny(3, 5) == false,
-		s.ContainsAny(5, 7) == true,
-		s.ContainsAny(1, 7) == true,
-		s.ContainsAny(1, 1) == false,
-		s.ContainsAny(2, 2) == false,
 	}
 	for i, ok := range assertions {
 		if !ok {

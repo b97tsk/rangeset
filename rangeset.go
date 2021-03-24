@@ -218,16 +218,6 @@ func (set RangeSet) ContainsRange(low, high int64) bool {
 	return i < len(set) && set[i].Low <= low && high <= set[i].High && low < high
 }
 
-// ContainsAny reports whether or not set contains any element in range
-// [low, high).
-func (set RangeSet) ContainsAny(low, high int64) bool {
-	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
-	t := set[i:]
-	j := i + sort.Search(len(t), func(i int) bool { return t[i].Low >= high })
-
-	return i < j && low < high
-}
-
 // Difference returns the subset of set that having all elements in other
 // excluded.
 func (set RangeSet) Difference(other RangeSet) RangeSet {
