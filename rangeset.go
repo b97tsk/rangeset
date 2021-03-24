@@ -106,13 +106,6 @@ func (set *RangeSet) AddRange(low, high int64) {
 	*set = s
 }
 
-// AddRanges adds zero or more half-open ranges into set.
-func (set *RangeSet) AddRanges(ranges ...Range) {
-	for _, r := range ranges {
-		set.AddRange(r.Low, r.High)
-	}
-}
-
 // Delete removes a single element from set.
 func (set *RangeSet) Delete(single int64) {
 	set.DeleteRange(single, single+1)
@@ -197,13 +190,6 @@ func (set *RangeSet) DeleteRange(low, high int64) {
 
 	s = append(s[:i], s[j:]...)
 	*set = s
-}
-
-// DeleteRanges removes zero or more half-open ranges from set.
-func (set *RangeSet) DeleteRanges(ranges ...Range) {
-	for _, r := range ranges {
-		set.DeleteRange(r.Low, r.High)
-	}
 }
 
 // Contains reports whether or not set contains a single element.

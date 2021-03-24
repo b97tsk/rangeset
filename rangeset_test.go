@@ -30,7 +30,7 @@ func TestFromRange(t *testing.T) {
 
 func TestAdd(t *testing.T) {
 	addRange := func(s RangeSet, r Range) RangeSet {
-		s.AddRanges(r)
+		s.AddRange(r.Low, r.High)
 		return s
 	}
 	addSingle := func(s RangeSet, single int64) RangeSet {
@@ -84,7 +84,7 @@ func TestAdd(t *testing.T) {
 
 func TestDelete(t *testing.T) {
 	deleteRange := func(s RangeSet, r Range) RangeSet {
-		s.DeleteRanges(r)
+		s.DeleteRange(r.Low, r.High)
 		return s
 	}
 	deleteSingle := func(s RangeSet, single int64) RangeSet {
