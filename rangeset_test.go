@@ -21,7 +21,7 @@ func TestFromRange(t *testing.T) {
 		},
 	}
 	for i, c := range testCases {
-		if !c.Result.Equals(c.Expect) {
+		if !c.Result.Equal(c.Expect) {
 			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
@@ -75,7 +75,7 @@ func TestAdd(t *testing.T) {
 		},
 	}
 	for i, c := range testCases {
-		if !c.Result.Equals(c.Expect) {
+		if !c.Result.Equal(c.Expect) {
 			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
@@ -137,7 +137,7 @@ func TestDelete(t *testing.T) {
 		},
 	}
 	for i, c := range testCases {
-		if !c.Result.Equals(c.Expect) {
+		if !c.Result.Equal(c.Expect) {
 			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
@@ -181,18 +181,18 @@ func TestDifference(t *testing.T) {
 		},
 	}
 	for i, c := range testCases {
-		if !c.Result.Equals(c.Expect) {
+		if !c.Result.Equal(c.Expect) {
 			t.Fail()
 			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
 		}
 	}
 }
 
-func TestEquals(t *testing.T) {
+func TestEqual(t *testing.T) {
 	assertions := []bool{
-		RangeSet{{1, 3}, {5, 7}}.Equals(RangeSet{{1, 3}, {5, 7}}),
-		!RangeSet{{1, 3}, {5, 7}}.Equals(RangeSet{{1, 3}, {5, 9}}),
-		!RangeSet{{1, 3}, {5, 7}}.Equals(RangeSet{{1, 3}}),
+		RangeSet{{1, 3}, {5, 7}}.Equal(RangeSet{{1, 3}, {5, 7}}),
+		!RangeSet{{1, 3}, {5, 7}}.Equal(RangeSet{{1, 3}, {5, 9}}),
+		!RangeSet{{1, 3}, {5, 7}}.Equal(RangeSet{{1, 3}}),
 	}
 	for i, ok := range assertions {
 		if !ok {

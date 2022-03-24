@@ -209,8 +209,8 @@ func (set RangeSet) Difference(other RangeSet) RangeSet {
 	return set.Intersection(other.Complement())
 }
 
-// Equals reports whether or not set is identical to other.
-func (set RangeSet) Equals(other RangeSet) bool {
+// Equal reports whether or not set is identical to other.
+func (set RangeSet) Equal(other RangeSet) bool {
 	if len(set) != len(other) {
 		return false
 	}
