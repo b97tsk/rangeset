@@ -1,39 +1,42 @@
 package rangeset
 
-import "math"
+import . "golang.org/x/exp/constraints"
 
 // Complement returns the inverse of set.
-func (set RangeSet) Complement() RangeSet {
+//
+// Complement of an empty set is the return value of Universal[E](), which
+// contains every E except one, the maximum value of E.
+func (set RangeSet[E]) Complement() RangeSet[E] {
 	if len(set) == 0 {
-		return Universal()
+		return Universal[E]()
 	}
 
-	return complementNonEmpty(set)
+	return complement(set)
 }
 
-func complementNonEmpty(set RangeSet) RangeSet {
-	var result RangeSet
+func complement[E Integer](set RangeSet[E]) RangeSet[E] {
+	var res RangeSet[E]
 
 	if len(set) > 1 {
-		result = make(RangeSet, 0, len(set)+1) // Pre-allocation.
+		res = make(RangeSet[E], 0, len(set)+1) // Pre-allocation.
 	}
 
 	r0 := set[0]
 
-	if r0.Low > math.MinInt64 {
-		result = append(result, Range{math.MinInt64, r0.Low})
+	if r0.Low > minOf[E]() {
+		res = append(res, Range[E]{minOf[E](), r0.Low})
 	}
 
-	low := r0.High
+	lo := r0.High
 
 	for _, r := range set[1:] {
-		result = append(result, Range{low, r.Low})
-		low = r.High
+		res = append(res, Range[E]{lo, r.Low})
+		lo = r.High
 	}
 
-	if low < math.MaxInt64 {
-		result = append(result, Range{low, math.MaxInt64})
+	if lo < maxOf[E]() {
+		res = append(res, Range[E]{lo, maxOf[E]()})
 	}
 
-	return result
+	return res
 }

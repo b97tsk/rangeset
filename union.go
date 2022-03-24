@@ -1,21 +1,25 @@
 package rangeset
 
-import "sort"
+import (
+	"sort"
+
+	. "golang.org/x/exp/constraints"
+)
 
 // Union returns the union of set and other.
-func (set RangeSet) Union(other RangeSet) RangeSet {
-	return unionBuffer(set, other, nil)
+func (set RangeSet[E]) Union(other RangeSet[E]) RangeSet[E] {
+	return unionBuffer[E](set, other, nil)
 }
 
 // Union returns the union of zero or more sets.
-func Union(sets ...RangeSet) RangeSet {
-	return combine(unionBuffer, sets...)
+func Union[E Integer](sets ...RangeSet[E]) RangeSet[E] {
+	return combine(unionBuffer[E], sets...)
 }
 
-// unionBuffer returns the union of s1 and s2, using buffer as its initial
+// unionBuffer returns the union of s1 and s2, using buf as its initial
 // backing storage.
-func unionBuffer(s1, s2, buffer RangeSet) RangeSet {
-	result := buffer[:0]
+func unionBuffer[E Integer](s1, s2, buf RangeSet[E]) RangeSet[E] {
+	res := buf[:0]
 
 	for {
 		if len(s1) < len(s2) {
@@ -23,7 +27,7 @@ func unionBuffer(s1, s2, buffer RangeSet) RangeSet {
 		}
 
 		if len(s2) == 0 {
-			return append(result, s1...)
+			return append(res, s1...)
 		}
 
 		r := s2[0]
@@ -36,7 +40,7 @@ func unionBuffer(s1, s2, buffer RangeSet) RangeSet {
 			i--
 		}
 
-		result = append(result, s1[:i]...)
+		res = append(res, s1[:i]...)
 		s1 = s1[i:]
 
 	Again:
@@ -50,6 +54,6 @@ func unionBuffer(s1, s2, buffer RangeSet) RangeSet {
 			goto Again
 		}
 
-		result = append(result, r)
+		res = append(res, r)
 	}
 }

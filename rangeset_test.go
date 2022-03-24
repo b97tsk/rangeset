@@ -8,144 +8,155 @@ import (
 )
 
 func TestFromRange(t *testing.T) {
+	type E int
+
 	testCases := []struct {
-		Result, Expect RangeSet
+		Result, Expected RangeSet[E]
 	}{
 		{
-			FromRange(1, 5),
-			RangeSet{{1, 5}},
+			FromRange[E](1, 5),
+			RangeSet[E]{{1, 5}},
 		},
 		{
-			FromRange(5, 1),
-			RangeSet{},
+			FromRange[E](5, 1),
+			RangeSet[E]{},
 		},
 	}
+
 	for i, c := range testCases {
-		if !c.Result.Equal(c.Expect) {
+		if !c.Result.Equal(c.Expected) {
 			t.Fail()
-			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+			t.Logf("Case %v: want %v, but got %v", i, c.Expected, c.Result)
 		}
 	}
 }
 
 func TestAdd(t *testing.T) {
-	addRange := func(s RangeSet, r Range) RangeSet {
+	type E int
+
+	addRange := func(s RangeSet[E], r Range[E]) RangeSet[E] {
 		s.AddRange(r.Low, r.High)
 		return s
 	}
-	addSingle := func(s RangeSet, single int64) RangeSet {
-		s.Add(single)
+	addSingle := func(s RangeSet[E], e E) RangeSet[E] {
+		s.Add(e)
 		return s
 	}
 
 	testCases := []struct {
-		Result, Expect RangeSet
+		Result, Expected RangeSet[E]
 	}{
 		{
-			addRange(RangeSet{{1, 4}, {9, 12}}, Range{5, 8}),
-			RangeSet{{1, 4}, {5, 8}, {9, 12}},
+			addRange(RangeSet[E]{{1, 4}, {9, 12}}, Range[E]{5, 8}),
+			RangeSet[E]{{1, 4}, {5, 8}, {9, 12}},
 		},
 		{
-			addSingle(RangeSet{{1, 4}, {9, 12}}, 6),
-			RangeSet{{1, 4}, {6, 7}, {9, 12}},
+			addSingle(RangeSet[E]{{1, 4}, {9, 12}}, 6),
+			RangeSet[E]{{1, 4}, {6, 7}, {9, 12}},
 		},
 		{
-			addRange(RangeSet{{1, 4}, {9, 12}}, Range{4, 8}),
-			RangeSet{{1, 8}, {9, 12}},
+			addRange(RangeSet[E]{{1, 4}, {9, 12}}, Range[E]{4, 8}),
+			RangeSet[E]{{1, 8}, {9, 12}},
 		},
 		{
-			addRange(RangeSet{{1, 4}, {9, 12}}, Range{5, 9}),
-			RangeSet{{1, 4}, {5, 12}},
+			addRange(RangeSet[E]{{1, 4}, {9, 12}}, Range[E]{5, 9}),
+			RangeSet[E]{{1, 4}, {5, 12}},
 		},
 		{
-			addRange(RangeSet{{1, 4}, {9, 12}}, Range{4, 9}),
-			RangeSet{{1, 12}},
+			addRange(RangeSet[E]{{1, 4}, {9, 12}}, Range[E]{4, 9}),
+			RangeSet[E]{{1, 12}},
 		},
 		{
-			addSingle(RangeSet{{1, 4}, {9, 12}}, 10),
-			RangeSet{{1, 4}, {9, 12}},
+			addSingle(RangeSet[E]{{1, 4}, {9, 12}}, 10),
+			RangeSet[E]{{1, 4}, {9, 12}},
 		},
 		{
-			addRange(RangeSet{{1, 4}, {9, 12}}, Range{9, 12}),
-			RangeSet{{1, 4}, {9, 12}},
+			addRange(RangeSet[E]{{1, 4}, {9, 12}}, Range[E]{9, 12}),
+			RangeSet[E]{{1, 4}, {9, 12}},
 		},
 		{
-			addRange(RangeSet{{1, 4}, {9, 12}}, Range{12, 9}),
-			RangeSet{{1, 4}, {9, 12}},
+			addRange(RangeSet[E]{{1, 4}, {9, 12}}, Range[E]{12, 9}),
+			RangeSet[E]{{1, 4}, {9, 12}},
 		},
 	}
+
 	for i, c := range testCases {
-		if !c.Result.Equal(c.Expect) {
+		if !c.Result.Equal(c.Expected) {
 			t.Fail()
-			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+			t.Logf("Case %v: want %v, but got %v", i, c.Expected, c.Result)
 		}
 	}
 }
 
 func TestDelete(t *testing.T) {
-	deleteRange := func(s RangeSet, r Range) RangeSet {
+	type E int
+
+	deleteRange := func(s RangeSet[E], r Range[E]) RangeSet[E] {
 		s.DeleteRange(r.Low, r.High)
 		return s
 	}
-	deleteSingle := func(s RangeSet, single int64) RangeSet {
-		s.Delete(single)
+	deleteSingle := func(s RangeSet[E], e E) RangeSet[E] {
+		s.Delete(e)
 		return s
 	}
 
 	testCases := []struct {
-		Result, Expect RangeSet
+		Result, Expected RangeSet[E]
 	}{
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{7, 10}),
-			RangeSet{{1, 4}, {13, 16}},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{7, 10}),
+			RangeSet[E]{{1, 4}, {13, 16}},
 		},
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{7, 9}),
-			RangeSet{{1, 4}, {9, 10}, {13, 16}},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{7, 9}),
+			RangeSet[E]{{1, 4}, {9, 10}, {13, 16}},
 		},
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{8, 10}),
-			RangeSet{{1, 4}, {7, 8}, {13, 16}},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{8, 10}),
+			RangeSet[E]{{1, 4}, {7, 8}, {13, 16}},
 		},
 		{
-			deleteSingle(RangeSet{{1, 4}, {7, 10}, {13, 16}}, 8),
-			RangeSet{{1, 4}, {7, 8}, {9, 10}, {13, 16}},
+			deleteSingle(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, 8),
+			RangeSet[E]{{1, 4}, {7, 8}, {9, 10}, {13, 16}},
 		},
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{1, 16}),
-			RangeSet{},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{1, 16}),
+			RangeSet[E]{},
 		},
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{1, 15}),
-			RangeSet{{15, 16}},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{1, 15}),
+			RangeSet[E]{{15, 16}},
 		},
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{2, 16}),
-			RangeSet{{1, 2}},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{2, 16}),
+			RangeSet[E]{{1, 2}},
 		},
 		{
-			deleteSingle(RangeSet{{1, 4}, {7, 10}, {13, 16}}, 5),
-			RangeSet{{1, 4}, {7, 10}, {13, 16}},
+			deleteSingle(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, 5),
+			RangeSet[E]{{1, 4}, {7, 10}, {13, 16}},
 		},
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{4, 7}),
-			RangeSet{{1, 4}, {7, 10}, {13, 16}},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{4, 7}),
+			RangeSet[E]{{1, 4}, {7, 10}, {13, 16}},
 		},
 		{
-			deleteRange(RangeSet{{1, 4}, {7, 10}, {13, 16}}, Range{7, 4}),
-			RangeSet{{1, 4}, {7, 10}, {13, 16}},
+			deleteRange(RangeSet[E]{{1, 4}, {7, 10}, {13, 16}}, Range[E]{7, 4}),
+			RangeSet[E]{{1, 4}, {7, 10}, {13, 16}},
 		},
 	}
+
 	for i, c := range testCases {
-		if !c.Result.Equal(c.Expect) {
+		if !c.Result.Equal(c.Expected) {
 			t.Fail()
-			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+			t.Logf("Case %v: want %v, but got %v", i, c.Expected, c.Result)
 		}
 	}
 }
 
 func TestContains(t *testing.T) {
-	s := RangeSet{{1, 3}, {5, 7}}
+	type E int
+
+	s := RangeSet[E]{{1, 3}, {5, 7}}
 
 	assertions := []bool{
 		s.Contains(0) == false,
@@ -163,6 +174,7 @@ func TestContains(t *testing.T) {
 		s.ContainsRange(1, 1) == false,
 		s.ContainsRange(2, 2) == false,
 	}
+
 	for i, ok := range assertions {
 		if !ok {
 			t.Fail()
@@ -172,28 +184,34 @@ func TestContains(t *testing.T) {
 }
 
 func TestDifference(t *testing.T) {
+	type E int
+
 	testCases := []struct {
-		Result, Expect RangeSet
+		Result, Expected RangeSet[E]
 	}{
 		{
-			RangeSet{{1, 5}, {7, 11}}.Difference(RangeSet{{3, 9}}),
-			RangeSet{{1, 3}, {9, 11}},
+			RangeSet[E]{{1, 5}, {7, 11}}.Difference(RangeSet[E]{{3, 9}}),
+			RangeSet[E]{{1, 3}, {9, 11}},
 		},
 	}
+
 	for i, c := range testCases {
-		if !c.Result.Equal(c.Expect) {
+		if !c.Result.Equal(c.Expected) {
 			t.Fail()
-			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+			t.Logf("Case %v: want %v, but got %v", i, c.Expected, c.Result)
 		}
 	}
 }
 
 func TestEqual(t *testing.T) {
+	type E int
+
 	assertions := []bool{
-		RangeSet{{1, 3}, {5, 7}}.Equal(RangeSet{{1, 3}, {5, 7}}),
-		!RangeSet{{1, 3}, {5, 7}}.Equal(RangeSet{{1, 3}, {5, 9}}),
-		!RangeSet{{1, 3}, {5, 7}}.Equal(RangeSet{{1, 3}}),
+		RangeSet[E]{{1, 3}, {5, 7}}.Equal(RangeSet[E]{{1, 3}, {5, 7}}),
+		!RangeSet[E]{{1, 3}, {5, 7}}.Equal(RangeSet[E]{{1, 3}, {5, 9}}),
+		!RangeSet[E]{{1, 3}, {5, 7}}.Equal(RangeSet[E]{{1, 3}}),
 	}
+
 	for i, ok := range assertions {
 		if !ok {
 			t.Fail()
@@ -203,36 +221,41 @@ func TestEqual(t *testing.T) {
 }
 
 func TestExtent(t *testing.T) {
+	type E int
+
 	testCases := []struct {
-		Result, Expect Range
+		Result, Expected Range[E]
 	}{
 		{
-			RangeSet{{1, 3}, {5, 7}}.Extent(),
-			Range{1, 7},
+			RangeSet[E]{{1, 3}, {5, 7}}.Extent(),
+			Range[E]{1, 7},
 		},
 		{
-			Universal().Extent(),
-			Range{math.MinInt64, math.MaxInt64},
+			Universal[E]().Extent(),
+			Range[E]{math.MinInt, math.MaxInt},
 		},
 		{
-			RangeSet{}.Extent(),
-			Range{},
+			RangeSet[E]{}.Extent(),
+			Range[E]{},
 		},
 	}
 	for i, c := range testCases {
-		if c.Result != c.Expect {
+		if c.Result != c.Expected {
 			t.Fail()
-			t.Logf("Case %v: want %v, but got %v", i, c.Expect, c.Result)
+			t.Logf("Case %v: want %v, but got %v", i, c.Expected, c.Result)
 		}
 	}
 }
 
 func TestIsSubsetOf(t *testing.T) {
+	type E int
+
 	assertions := []bool{
-		RangeSet{}.IsSubsetOf(RangeSet{}) == true,
-		RangeSet{{3, 9}}.IsSubsetOf(RangeSet{{1, 11}}) == true,
-		RangeSet{{3, 9}}.IsSubsetOf(RangeSet{{1, 5}, {7, 11}}) == false,
+		RangeSet[E]{}.IsSubsetOf(RangeSet[E]{}) == true,
+		RangeSet[E]{{3, 9}}.IsSubsetOf(RangeSet[E]{{1, 11}}) == true,
+		RangeSet[E]{{3, 9}}.IsSubsetOf(RangeSet[E]{{1, 5}, {7, 11}}) == false,
 	}
+
 	for i, ok := range assertions {
 		if !ok {
 			t.Fail()
@@ -242,11 +265,14 @@ func TestIsSubsetOf(t *testing.T) {
 }
 
 func TestCount(t *testing.T) {
+	type E int
+
 	assertions := []bool{
-		RangeSet{}.Count() == 0,
-		RangeSet{{1, 4}}.Count() == 3,
-		RangeSet{{1, 3}, {5, 7}}.Count() == 4,
+		RangeSet[E]{}.Count() == 0,
+		RangeSet[E]{{1, 4}}.Count() == 3,
+		RangeSet[E]{{1, 3}, {5, 7}}.Count() == 4,
 	}
+
 	for i, ok := range assertions {
 		if !ok {
 			t.Fail()

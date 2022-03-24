@@ -4,8 +4,9 @@ import "sort"
 
 // Overlaps reports whether or not the intersection of set and other are
 // not empty.
-func (set RangeSet) Overlaps(other RangeSet) bool {
+func (set RangeSet[E]) Overlaps(other RangeSet[E]) bool {
 	s1, s2 := set, other
+
 	for {
 		if len(s1) < len(s2) {
 			s1, s2 = s2, s1

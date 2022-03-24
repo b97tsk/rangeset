@@ -2,75 +2,76 @@
 package rangeset
 
 import (
-	"math"
 	"sort"
+
+	. "golang.org/x/exp/constraints"
 )
 
-// A Range is a half-open interval of int64.
-type Range struct {
-	Low  int64 // inclusive
-	High int64 // exclusive
+// A Range is a half-open interval of type E.
+type Range[E Integer] struct {
+	Low  E // inclusive
+	High E // exclusive
 }
 
 // A RangeSet is a slice of discrete Ranges sorted in ascending order.
 // The zero value for a RangeSet, i.e. a nil RangeSet, is an empty set.
 //
-// Since Range is half-open, you can never add math.MaxInt64 into a RangeSet.
-// Thus, complement of an empty set is [math.MinInt64, math.MaxInt64).
-type RangeSet []Range
+// Since Range is half-open, you can never add the maximum value of E into
+// a RangeSet.
+type RangeSet[E Integer] []Range[E]
 
-// FromRange creates a RangeSet from range [low, high).
+// FromRange creates a RangeSet from range [lo, hi).
 //
-// If low >= high, FromRange returns nil.
-func FromRange(low, high int64) RangeSet {
-	if low >= high {
+// If lo >= hi, FromRange returns nil.
+func FromRange[E Integer](lo, hi E) RangeSet[E] {
+	if lo >= hi {
 		return nil
 	}
 
-	return RangeSet{{low, high}}
+	return RangeSet[E]{{lo, hi}}
 }
 
-// Universal returns the largest RangeSet, which is the complement of an empty
-// set, i.e. [math.MinInt64, math.MaxInt64).
-func Universal() RangeSet {
-	return FromRange(math.MinInt64, math.MaxInt64)
+// Universal returns the largest RangeSet, which contains every E except one,
+// the maximum value of E.
+func Universal[E Integer]() RangeSet[E] {
+	return FromRange(minOf[E](), maxOf[E]())
 }
 
 // Add adds a single element into set.
-func (set *RangeSet) Add(single int64) {
-	set.AddRange(single, single+1)
+func (set *RangeSet[E]) Add(e E) {
+	set.AddRange(e, e+1)
 }
 
-// AddRange adds range [low, high) into set.
-func (set *RangeSet) AddRange(low, high int64) {
+// AddRange adds range [lo, hi) into set.
+func (set *RangeSet[E]) AddRange(lo, hi E) {
 	s := *set
 
-	i := sort.Search(len(s), func(i int) bool { return s[i].Low > low })
-	j := sort.Search(len(s), func(i int) bool { return s[i].High > high })
+	i := sort.Search(len(s), func(i int) bool { return s[i].Low > lo })
+	j := sort.Search(len(s), func(i int) bool { return s[i].High > hi })
 
 	// ┌────────┬─────────────────────────────────────────┐
 	// │        │    j-1        j        i-1        i     │
 	// │ Case 1 │  |-----|   |-----| ~ |-----|   |-----|  │
-	// │        │        |<-high ->|   |<- low ->|        │
+	// │        │        |<- hi  ->|   |<- lo  ->|        │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    j-1        j         i               │
 	// │ Case 2 │  |-----|   |-----|   |-----|            │
-	// │        │            |<- low ->|                  │
-	// │        │        |<-high ->|                      │
+	// │        │            |<- lo  ->|                  │
+	// │        │        |<- hi  ->|                      │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    i-1       i,j                        │
 	// │ Case 3 │  |-----|   |-----|                      │
-	// │        │  |<- low ->|                            │
-	// │        │        |<-high ->|                      │
+	// │        │  |<- lo  ->|                            │
+	// │        │        |<- hi  ->|                      │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    i-1        i         j               │
 	// │ Case 4 │  |-----|   |-----|   |-----|            │
-	// │        │  |<- low ->|     |<-high ->|            │
+	// │        │  |<- lo  ->|     |<- hi  ->|            │
 	// │        │                                         │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    i-1        i        j-1        j     │
 	// │ Case 5 │  |-----|   |-----| ~ |-----|   |-----|  │
-	// │        │  |<- low ->|               |<-high ->|  │
+	// │        │  |<- lo  ->|               |<- hi  ->|  │
 	// └────────┴─────────────────────────────────────────┘
 
 	if i > j { // Case 1 and 2.
@@ -79,93 +80,93 @@ func (set *RangeSet) AddRange(low, high int64) {
 
 	// Case 3, 4 and 5.
 
-	if i > 0 && low <= s[i-1].High {
-		low = s[i-1].Low
+	if i > 0 && lo <= s[i-1].High {
+		lo = s[i-1].Low
 		i--
 	}
 
-	if j < len(s) && high >= s[j].Low {
-		high = s[j].High
+	if j < len(s) && hi >= s[j].Low {
+		hi = s[j].High
 		j++
 	}
 
-	if i == j { // Case 3 (where low and high overlaps).
-		if low < high {
-			s = append(s, Range{})
+	if i == j { // Case 3 (where lo and hi overlaps).
+		if lo < hi {
+			s = append(s, Range[E]{})
 			copy(s[i+1:], s[i:])
-			s[i] = Range{low, high}
+			s[i] = Range[E]{lo, hi}
 			*set = s
 		}
 
 		return
 	}
 
-	s[i] = Range{low, high}
+	s[i] = Range[E]{lo, hi}
 	s = append(s[:i+1], s[j:]...)
 	*set = s
 }
 
 // Delete removes a single element from set.
-func (set *RangeSet) Delete(single int64) {
-	set.DeleteRange(single, single+1)
+func (set *RangeSet[E]) Delete(e E) {
+	set.DeleteRange(e, e+1)
 }
 
-// DeleteRange removes range [low, high) from set.
-func (set *RangeSet) DeleteRange(low, high int64) {
+// DeleteRange removes range [lo, hi) from set.
+func (set *RangeSet[E]) DeleteRange(lo, hi E) {
 	s := *set
 
-	i := sort.Search(len(s), func(i int) bool { return s[i].High > low })
-	// j := sort.Search(len(s), func(i int) bool { return s[i].Low > high })
+	i := sort.Search(len(s), func(i int) bool { return s[i].High > lo })
+	// j := sort.Search(len(s), func(i int) bool { return s[i].Low > hi })
 
 	// ┌────────┬─────────────────────────────────────────┐
 	// │        │    j-1        j        i-1        i     │
 	// │ Case 1 │  |-----|   |-----| ~ |-----|   |-----|  │
-	// │        │  |<-high ->|               |<- low ->|  │
+	// │        │  |<- hi  ->|               |<- lo  ->|  │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    j-1        j         i               │
 	// │ Case 2 │  |-----|   |-----|   |-----|            │
-	// │        │  |<-high ->|     |<- low ->|            │
+	// │        │  |<- hi  ->|     |<- lo  ->|            │
 	// │        │                                         │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    i-1       i,j                        │
 	// │ Case 3 │  |-----|   |-----|                      │
-	// │        │        |<- low ->|                      │
-	// │        │  |<-high ->|                            │
+	// │        │        |<- lo  ->|                      │
+	// │        │  |<- hi  ->|                            │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    i-1        i         j               │
 	// │ Case 4 │  |-----|   |-----|   |-----|            │
-	// │        │        |<- low ->|                      │
-	// │        │            |<-high ->|                  │
+	// │        │        |<- lo  ->|                      │
+	// │        │            |<- hi  ->|                  │
 	// ├────────┼─────────────────────────────────────────┤
 	// │        │    i-1        i        j-1        j     │
 	// │ Case 5 │  |-----|   |-----| ~ |-----|   |-----|  │
-	// │        │        |<- low ->|   |<-high ->|        │
+	// │        │        |<- lo  ->|   |<- hi  ->|        │
 	// └────────┴─────────────────────────────────────────┘
 
 	// Optimized, j >= i.
 	t := s[i:]
-	j := i + sort.Search(len(t), func(i int) bool { return t[i].Low > high })
+	j := i + sort.Search(len(t), func(i int) bool { return t[i].Low > hi })
 
 	if i == j { // Case 1, 2 and 3.
 		return
 	}
 
 	if i == j-1 { // Case 4.
-		if low > s[i].Low {
-			if high < s[i].High {
-				if low < high {
-					s = append(s, Range{})
+		if lo > s[i].Low {
+			if hi < s[i].High {
+				if lo < hi {
+					s = append(s, Range[E]{})
 					copy(s[j:], s[i:])
-					s[i].High = low
-					s[j].Low = high
+					s[i].High = lo
+					s[j].Low = hi
 					*set = s
 				}
 			} else {
-				s[i].High = low
+				s[i].High = lo
 			}
 		} else {
-			if high < s[i].High {
-				s[i].Low = high
+			if hi < s[i].High {
+				s[i].Low = hi
 			} else {
 				s = append(s[:i], s[j:]...)
 				*set = s
@@ -177,13 +178,13 @@ func (set *RangeSet) DeleteRange(low, high int64) {
 
 	// Case 5.
 
-	if low > s[i].Low {
-		s[i].High = low
+	if lo > s[i].Low {
+		s[i].High = lo
 		i++
 	}
 
-	if high < s[j-1].High {
-		s[j-1].Low = high
+	if hi < s[j-1].High {
+		s[j-1].Low = hi
 		j--
 	}
 
@@ -192,25 +193,25 @@ func (set *RangeSet) DeleteRange(low, high int64) {
 }
 
 // Contains reports whether or not set contains a single element.
-func (set RangeSet) Contains(single int64) bool {
-	return set.ContainsRange(single, single+1)
+func (set RangeSet[E]) Contains(e E) bool {
+	return set.ContainsRange(e, e+1)
 }
 
 // ContainsRange reports whether or not set contains every element in range
-// [low, high).
-func (set RangeSet) ContainsRange(low, high int64) bool {
-	i := sort.Search(len(set), func(i int) bool { return set[i].High > low })
-	return i < len(set) && set[i].Low <= low && high <= set[i].High && low < high
+// [lo, hi).
+func (set RangeSet[E]) ContainsRange(lo, hi E) bool {
+	i := sort.Search(len(set), func(i int) bool { return set[i].High > lo })
+	return i < len(set) && set[i].Low <= lo && hi <= set[i].High && lo < hi
 }
 
 // Difference returns the subset of set that having all elements in other
 // excluded.
-func (set RangeSet) Difference(other RangeSet) RangeSet {
+func (set RangeSet[E]) Difference(other RangeSet[E]) RangeSet[E] {
 	return set.Intersection(other.Complement())
 }
 
 // Equal reports whether or not set is identical to other.
-func (set RangeSet) Equal(other RangeSet) bool {
+func (set RangeSet[E]) Equal(other RangeSet[E]) bool {
 	if len(set) != len(other) {
 		return false
 	}
@@ -227,19 +228,19 @@ func (set RangeSet) Equal(other RangeSet) bool {
 // Extent returns the smallest Range that covers the whole set.
 //
 // If set is empty, Extent returns the zero value.
-func (set RangeSet) Extent() Range {
+func (set RangeSet[E]) Extent() Range[E] {
 	if len(set) == 0 {
-		return Range{}
+		return Range[E]{}
 	}
 
-	return Range{
+	return Range[E]{
 		Low:  set[0].Low,
 		High: set[len(set)-1].High,
 	}
 }
 
 // IsSubsetOf reports whether or not other contains every element in set.
-func (set RangeSet) IsSubsetOf(other RangeSet) bool {
+func (set RangeSet[E]) IsSubsetOf(other RangeSet[E]) bool {
 	for _, r := range set {
 		if !other.ContainsRange(r.Low, r.High) {
 			return false
@@ -250,7 +251,7 @@ func (set RangeSet) IsSubsetOf(other RangeSet) bool {
 }
 
 // Count returns the number of element in set.
-func (set RangeSet) Count() uint64 {
+func (set RangeSet[E]) Count() uint64 {
 	var count uint64
 
 	for _, r := range set {
