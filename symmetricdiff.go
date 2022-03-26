@@ -1,13 +1,9 @@
 package rangeset
 
-import (
-	"sort"
-
-	. "golang.org/x/exp/constraints"
-)
+import "sort"
 
 // SymmetricDifference returns the symmetric difference of two sets.
-func SymmetricDifference[E Integer](s1, s2 RangeSet[E]) RangeSet[E] {
+func SymmetricDifference[E Elem](s1, s2 RangeSet[E]) RangeSet[E] {
 	if len(s1) < len(s2) {
 		s1, s2 = s2, s1
 	}
@@ -26,7 +22,7 @@ func SymmetricDifference[E Integer](s1, s2 RangeSet[E]) RangeSet[E] {
 	return set
 }
 
-func symmetricDifferenceRange[E Integer](set *RangeSet[E], lo, hi E) {
+func symmetricDifferenceRange[E Elem](set *RangeSet[E], lo, hi E) {
 	s := *set
 
 	i := sort.Search(len(s), func(i int) bool { return s[i].High > lo })

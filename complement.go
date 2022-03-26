@@ -1,7 +1,5 @@
 package rangeset
 
-import . "golang.org/x/exp/constraints"
-
 // Complement returns the inverse of set.
 //
 // Complement of an empty set is the return value of Universal[E](), which
@@ -14,7 +12,7 @@ func (set RangeSet[E]) Complement() RangeSet[E] {
 	return complement(set)
 }
 
-func complement[E Integer](set RangeSet[E]) RangeSet[E] {
+func complement[E Elem](set RangeSet[E]) RangeSet[E] {
 	var res RangeSet[E]
 
 	if len(set) > 1 {

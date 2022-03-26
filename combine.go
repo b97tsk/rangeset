@@ -1,8 +1,6 @@
 package rangeset
 
-import . "golang.org/x/exp/constraints"
-
-func combine[E Integer](
+func combine[E Elem](
 	op func(s1, s2, buf RangeSet[E]) RangeSet[E],
 	sets ...RangeSet[E],
 ) RangeSet[E] {

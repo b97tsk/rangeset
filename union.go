@@ -1,24 +1,20 @@
 package rangeset
 
-import (
-	"sort"
-
-	. "golang.org/x/exp/constraints"
-)
+import "sort"
 
 // Union returns the union of set and other.
 func (set RangeSet[E]) Union(other RangeSet[E]) RangeSet[E] {
-	return unionBuffer[E](set, other, nil)
+	return unionBuffer(set, other, nil)
 }
 
 // Union returns the union of zero or more sets.
-func Union[E Integer](sets ...RangeSet[E]) RangeSet[E] {
+func Union[E Elem](sets ...RangeSet[E]) RangeSet[E] {
 	return combine(unionBuffer[E], sets...)
 }
 
 // unionBuffer returns the union of s1 and s2, using buf as its initial
 // backing storage.
-func unionBuffer[E Integer](s1, s2, buf RangeSet[E]) RangeSet[E] {
+func unionBuffer[E Elem](s1, s2, buf RangeSet[E]) RangeSet[E] {
 	res := buf[:0]
 
 	for {

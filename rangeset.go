@@ -4,11 +4,14 @@ package rangeset
 import (
 	"sort"
 
-	. "golang.org/x/exp/constraints"
+	"golang.org/x/exp/constraints"
 )
 
+// Elem is the type set containing all supported element types.
+type Elem constraints.Integer
+
 // A Range is a half-open interval of type E.
-type Range[E Integer] struct {
+type Range[E Elem] struct {
 	Low  E // inclusive
 	High E // exclusive
 }
@@ -18,12 +21,12 @@ type Range[E Integer] struct {
 //
 // Since Range is half-open, you can never add the maximum value of E into
 // a RangeSet.
-type RangeSet[E Integer] []Range[E]
+type RangeSet[E Elem] []Range[E]
 
 // FromRange creates a RangeSet from range [lo, hi).
 //
 // If lo >= hi, FromRange returns nil.
-func FromRange[E Integer](lo, hi E) RangeSet[E] {
+func FromRange[E Elem](lo, hi E) RangeSet[E] {
 	if lo >= hi {
 		return nil
 	}
@@ -33,7 +36,7 @@ func FromRange[E Integer](lo, hi E) RangeSet[E] {
 
 // Universal returns the largest RangeSet, which contains every E except one,
 // the maximum value of E.
-func Universal[E Integer]() RangeSet[E] {
+func Universal[E Elem]() RangeSet[E] {
 	return FromRange(minOf[E](), maxOf[E]())
 }
 

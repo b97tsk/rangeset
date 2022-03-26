@@ -1,24 +1,20 @@
 package rangeset
 
-import (
-	"sort"
-
-	. "golang.org/x/exp/constraints"
-)
+import "sort"
 
 // Intersection returns the intersection of set and other.
 func (set RangeSet[E]) Intersection(other RangeSet[E]) RangeSet[E] {
-	return intersectionBuffer[E](set, other, nil)
+	return intersectionBuffer(set, other, nil)
 }
 
 // Intersection returns the intersection of zero or more sets.
-func Intersection[E Integer](sets ...RangeSet[E]) RangeSet[E] {
+func Intersection[E Elem](sets ...RangeSet[E]) RangeSet[E] {
 	return combine(intersectionBuffer[E], sets...)
 }
 
 // intersectionBuffer returns the intersection of s1 and s2, using buf as
 // its initial backing storage.
-func intersectionBuffer[E Integer](s1, s2, buf RangeSet[E]) RangeSet[E] {
+func intersectionBuffer[E Elem](s1, s2, buf RangeSet[E]) RangeSet[E] {
 	res := buf[:0]
 
 	for {
