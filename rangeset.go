@@ -195,13 +195,12 @@ func (set *RangeSet[E]) DeleteRange(lo, hi E) {
 	*set = s
 }
 
-// Contains reports whether or not set contains a single element.
+// Contains reports whether set contains a single element.
 func (set RangeSet[E]) Contains(e E) bool {
 	return set.ContainsRange(e, e+1)
 }
 
-// ContainsRange reports whether or not set contains every element in range
-// [lo, hi).
+// ContainsRange reports whether set contains every element in range [lo, hi).
 func (set RangeSet[E]) ContainsRange(lo, hi E) bool {
 	i := sort.Search(len(set), func(i int) bool { return set[i].High > lo })
 	return i < len(set) && set[i].Low <= lo && hi <= set[i].High && lo < hi
@@ -213,7 +212,7 @@ func (set RangeSet[E]) Difference(other RangeSet[E]) RangeSet[E] {
 	return set.Intersection(other.Complement())
 }
 
-// Equal reports whether or not set is identical to other.
+// Equal reports whether set is identical to other.
 func (set RangeSet[E]) Equal(other RangeSet[E]) bool {
 	if len(set) != len(other) {
 		return false
@@ -242,7 +241,7 @@ func (set RangeSet[E]) Extent() Range[E] {
 	}
 }
 
-// IsSubsetOf reports whether or not other contains every element in set.
+// IsSubsetOf reports whether other contains every element in set.
 func (set RangeSet[E]) IsSubsetOf(other RangeSet[E]) bool {
 	for _, r := range set {
 		if !other.ContainsRange(r.Low, r.High) {

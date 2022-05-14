@@ -2,8 +2,7 @@ package rangeset
 
 import "sort"
 
-// Overlaps reports whether or not the intersection of set and other are
-// not empty.
+// Overlaps reports whether the intersection of set and other is not empty.
 func (set RangeSet[E]) Overlaps(other RangeSet[E]) bool {
 	s1, s2 := set, other
 
