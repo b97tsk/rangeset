@@ -38,8 +38,8 @@ func TestAdd(t *testing.T) {
 		s.AddRange(r.Low, r.High)
 		return s
 	}
-	addSingle := func(s RangeSet[E], e E) RangeSet[E] {
-		s.Add(e)
+	addSingle := func(s RangeSet[E], v E) RangeSet[E] {
+		s.Add(v)
 		return s
 	}
 
@@ -95,8 +95,8 @@ func TestDelete(t *testing.T) {
 		s.DeleteRange(r.Low, r.High)
 		return s
 	}
-	deleteSingle := func(s RangeSet[E], e E) RangeSet[E] {
-		s.Delete(e)
+	deleteSingle := func(s RangeSet[E], v E) RangeSet[E] {
+		s.Delete(v)
 		return s
 	}
 

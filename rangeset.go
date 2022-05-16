@@ -41,8 +41,8 @@ func Universal[E Elem]() RangeSet[E] {
 }
 
 // Add adds a single element into set.
-func (set *RangeSet[E]) Add(e E) {
-	set.AddRange(e, e+1)
+func (set *RangeSet[E]) Add(v E) {
+	set.AddRange(v, v+1)
 }
 
 // AddRange adds range [lo, hi) into set.
@@ -110,8 +110,8 @@ func (set *RangeSet[E]) AddRange(lo, hi E) {
 }
 
 // Delete removes a single element from set.
-func (set *RangeSet[E]) Delete(e E) {
-	set.DeleteRange(e, e+1)
+func (set *RangeSet[E]) Delete(v E) {
+	set.DeleteRange(v, v+1)
 }
 
 // DeleteRange removes range [lo, hi) from set.
@@ -196,8 +196,8 @@ func (set *RangeSet[E]) DeleteRange(lo, hi E) {
 }
 
 // Contains reports whether set contains a single element.
-func (set RangeSet[E]) Contains(e E) bool {
-	return set.ContainsRange(e, e+1)
+func (set RangeSet[E]) Contains(v E) bool {
+	return set.ContainsRange(v, v+1)
 }
 
 // ContainsRange reports whether set contains every element in range [lo, hi).
