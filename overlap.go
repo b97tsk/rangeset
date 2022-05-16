@@ -25,7 +25,5 @@ func (set RangeSet[E]) Overlaps(other RangeSet[E]) bool {
 		if j > 0 {
 			return true
 		}
-
-		s1 = s1[j:]
 	}
 }

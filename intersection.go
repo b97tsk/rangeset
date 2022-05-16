@@ -45,9 +45,7 @@ func intersectionBuffer[E Elem](s1, s2, buf RangeSet[E]) RangeSet[E] {
 				r1.High = r.High
 			}
 
-			j--
+			s1 = s1[j-1:]
 		}
-
-		s1 = s1[j:]
 	}
 }
