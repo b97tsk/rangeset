@@ -1,4 +1,6 @@
 // Package rangeset is a library for manipulating sets of discrete ranges.
+//
+// Deprecated: Development moved to https://github.com/b97tsk/intervals.
 package rangeset
 
 import (
